@@ -1,20 +1,20 @@
-import redis 
+import redis
 
-def listener_messages():
-    r=redis.Redis(host='localhost', port=6379, db=0)
-    pub=r.pubsub()
-    pub.subscribe('radio_station')
-    for item in pub.listen():
-        if item['type'] == 'message':
-            print(item['data'].decode('utf-8'))
-        else:
-            print(item)
-        if item['type']=='message':
-            print(item['data'].decode('utf-8'))
-
-
-    r.close()
-
+def listen_messages():
+    r = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
+    
+    
+    pubsub = r.pubsub()
+    
+    
+    pubsub.subscribe('news_channel')
+    
+    print("Listening for messages on 'news_channel'...")
+    
+    
+    for message in pubsub.listen():
+        if message['type'] == 'message':
+            print(f"New Message Received: {message['data']}")
 
 if __name__ == '__main__':
-    listener_messages()
+    listen_messages()
